@@ -1,0 +1,22 @@
+{
+    "name": "axenox/proxy",
+    "require": {
+        "exface/core": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "\\axenox\\Proxy\\": ""
+        },
+        "exclude-from-classmap": [
+            "/Config/",
+            "/Translations/",
+            "/Model/"
+        ]
+    },
+    "extra": {
+        "app": {
+            "app_uid": "0x11eda96d703dd214a96d025041000001",
+            "app_alias": "axenox.Proxy"
+        }
+    }
+}

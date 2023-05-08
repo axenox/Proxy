@@ -1,0 +1,79 @@
+{
+    "uid": "0x11ed912e77d1079c912e025041000001",
+    "alias_with_namespace": "exface.proxy.routes",
+    "menu_parent_page_selector": "0xf8310d4bba2c11e7895fe4b318306b9a",
+    "menu_index": 11,
+    "menu_visible": true,
+    "name": "Proxy Routes",
+    "description": "",
+    "intro": "",
+    "replaces_page_selector": null,
+    "created_by_user_selector": "0x31000000000000000000000000000000",
+    "created_on": "2023-04-26 18:21:58",
+    "modified_by_user_selector": "0x31000000000000000000000000000000",
+    "modified_on": "2023-05-05 17:21:38",
+    "contents": {
+        "widget_type": "DataTable",
+        "object_alias": "axenox.Proxy.ROUTE",
+        "filters": [
+            {
+                "attribute_alias": "NAME"
+            },
+            {
+                "attribute_alias": "APP"
+            },
+            {
+                "attribute_alias": "DESTINATION_URL"
+            },
+            {
+                "attribute_alias": "DESTINATION_CONNECTION"
+            }
+        ],
+        "columns": [
+            {
+                "attribute_alias": "NAME"
+            },
+            {
+                "attribute_alias": "APP__ALIAS"
+            },
+            {
+                "attribute_alias": "ALIAS"
+            },
+            {
+                "calculation": "=Concatenate(WorkbenchUrl(), 'api\/proxy\/', ROUTE_URL)"
+            },
+            {
+                "attribute_alias": "DESTINATION_CONNECTION__LABEL"
+            },
+            {
+                "attribute_alias": "DESTINATION_URL"
+            }
+        ],
+        "sorters": [
+            {
+                "attribute_alias": "APP__ALIAS",
+                "direction": "asc"
+            },
+            {
+                "attribute_alias": "ALIAS",
+                "direction": "asc"
+            }
+        ],
+        "buttons": [
+            {
+                "action_alias": "exface.Core.ShowObjectCreateDialog"
+            },
+            {
+                "action_alias": "exface.Core.ShowObjectEditDialog",
+                "bind_to_double_click": true
+            },
+            {
+                "action_alias": "exface.Core.ShowObjectCopyDialog"
+            },
+            {
+                "action_alias": "exface.Core.DeleteObject",
+                "visibility": "optional"
+            }
+        ]
+    }
+}

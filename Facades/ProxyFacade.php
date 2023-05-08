@@ -4,9 +4,14 @@ namespace axenox\Proxy\Facades;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use function GuzzleHttp\Psr7\stream_for;
-use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Request;
 use exface\Core\Facades\AbstractHttpFacade\AbstractHttpFacade;
+use exface\Core\Factories\DataSheetFactory;
+use exface\Core\DataTypes\StringDataType;
+use exface\Core\Facades\AbstractHttpFacade\Middleware\AuthenticationMiddleware;
+use exface\Core\Exceptions\Facades\FacadeRoutingError;
+use axenox\Proxy\Facades\RequestHandlers\DefaultProxy;
 
 /**
  * This facade acts as a proxy: it fetches and passes along data located at the URI in the request parameter "url".
@@ -16,10 +21,10 @@ use exface\Core\Facades\AbstractHttpFacade\AbstractHttpFacade;
  * The client uses a secure HTTPS-conection, but the data source works with HTTP. If the data fetched from the data
  * source contains a resource URI (e.g. an image), the `Image` widget would normally just tell the client browser
  * to fetch the image from the given URI. This will fail because the browser would not want an HTTP-image in an
- * HTTPS-page. Since we trust the data source, a solution may be to wrap the real resource URI in a call to the
- * proxy facade: https://my.plattform.serv/api/proxy?url=[urlencodedURI]. Now the browser will request a safe
- * resource from our server, which in-turn will fetch it from the data source and pass the result on to the
- * browser.
+ * HTTPS-page. Since we trust the data source, a solution may be create a proxy route pointing to the real server with
+ * images and change the image path to: `https://my.plattform.serv/api/proxy/my_route/path_to_image.jpg`. Now the browser 
+ * will request a safe resource from our server, which in-turn will fetch it from the data source and pass the result on 
+ * to the browser.
  * 
  * A similar situation occurs if a data source checks the origin of requests and does not allow certain resource
  * types (again, images), to be requested separately: e.g. an image cannot be loaded if the corresponding web page
@@ -32,11 +37,22 @@ use exface\Core\Facades\AbstractHttpFacade\AbstractHttpFacade;
  * 
  * TODO The caching functionality is not implemented yet.
  * 
+ * ## Security
+ * 
+ * **WARNING**: the use of the proxy facade is always a potential security risc! Avoid to use it in production!
+ * 
+ * The proxy facade requires policies for the `HttpRequestAuthorizationPoint` as all HTTP facades do. Thus, you can
+ * (and should!) create policies for every proxy route.
+ * 
+ * Also make sure to define routes that only allow a very narrow scope of requests.
+ * 
  * @author Andrej Kabachnik
  *
  */
 class ProxyFacade extends AbstractHttpFacade
 {    
+    private $routesData = null;
+    
     /**
      * 
      * {@inheritDoc}
@@ -44,21 +60,12 @@ class ProxyFacade extends AbstractHttpFacade
      */
     protected function createResponse(ServerRequestInterface $request) : ResponseInterface
     {
-        // If the request passes security, request the target URL
-        $url = $request->getQueryParams()[url];
-        $method = $request->getMethod();
-        $requestHeaders = $request->getHeaders();
-        
-        $client = new Client();
-        $result = $client->request($method, $url, ['headers' => $requestHeaders]);
-        
-        $responseHeaders = $result->getHeaders();
-        unset($responseHeaders['Transfer-Encoding']);
-        // Merge haders from the target response and the security middleware in case the
-        // latter added something important.
-        $response = new Response($result->getStatusCode(), $responseHeaders, (string) $result->getBody(), $result->getProtocolVersion(), $result->getReasonPhrase());
-        
-        return $response;
+        $path = $request->getUri()->getPath();
+        $path = StringDataType::substringAfter($path, $this->getUrlRouteDefault() . '/', '');
+        $routeModel = $this->getRouteData($path);
+        $handlerClass = $routeModel['HANDLER_CLASS'] ?? '\\' . DefaultProxy::class;
+        $handler = new $handlerClass($this, $routeModel);
+        return $handler->handle($request);
     }
     
     /**
@@ -68,7 +75,7 @@ class ProxyFacade extends AbstractHttpFacade
      */
     public function getProxyUrl(string $uri) : string
     {
-        return $this->buildUrlToFacade() . '?url=' . urlencode($uri);
+        return $this->buildUrlToFacade() . '/' . urlencode($uri);
     }
 
     /**
@@ -79,5 +86,44 @@ class ProxyFacade extends AbstractHttpFacade
     public function getUrlRouteDefault(): string
     {
         return 'api/proxy';
+    }
+    
+    protected function getRouteData(string $route) : array
+    {
+        if ($this->routesData === null) {
+            $ds = DataSheetFactory::createFromObjectIdOrAlias($this->getWorkbench(), 'axenox.Proxy.ROUTE');
+            $ds->getColumns()->addMultiple([
+                'UID',
+                'ROUTE_URL',
+                'ROUTE_REGEX_FLAG',
+                'DESTINATION_URL',
+                'DESTINATION_CONNECTION',
+                'HANDLER_CLASS',
+                'HANDLER_UXON'
+            ]);
+            $ds->dataRead();
+            $this->routesData = $ds;
+        }
+        
+        foreach ($this->routesData->getRows() as $row) {
+            if ($row['ROUTE_URL'] && StringDataType::startsWith($route, $row['ROUTE_URL'])) {
+                return $row;
+            }
+        }
+        
+        throw new FacadeRoutingError('No route configuration found for "' . $route . '"');
+    }
+    
+    protected function getMiddleware() : array
+    {
+        $middleware = parent::getMiddleware();
+        $middleware[] = new AuthenticationMiddleware(
+            $this,
+            [
+                [AuthenticationMiddleware::class, 'extractBasicHttpAuthToken']
+            ]
+        );
+        
+        return $middleware;
     }
 }
