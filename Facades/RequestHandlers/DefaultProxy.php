@@ -54,18 +54,24 @@ class DefaultProxy implements RequestHandlerInterface, iCanBeConvertedToUxon
         }
         
         $method = $request->getMethod();
+        if ($method !== 'GET' && $method !== 'OPTIONS') {
+            $body = $request->getBody();
+        } else {
+            $body = null;
+        }
         
         $destinationQuery = $request->getUri()->getQuery();
         $destinationUrl = $this->getToUrl($path) . '/' . $destinationPath . ($destinationQuery ? '?' . $destinationQuery : '');
         $destinationUrl = ltrim($destinationUrl, '/');
+        $destinationUrl = str_replace('//', '/', $destinationUrl);
         
         $connection = $this->getRouteConnection($path);
-        $result = $connection->sendRequest(new Request($method, $destinationUrl, $this->getRequestHeaders($request)));
+        $result = $connection->sendRequest(new Request($method, $destinationUrl, $this->getRequestHeaders($request), $body));
         
         $responseHeaders = $this->getResponseHeaders($result);
         // TODO Merge haders from the target response and the security middleware in case the
         // latter added something important.
-        $response = new Response($result->getStatusCode(), $responseHeaders, (string) $result->getBody(), $result->getProtocolVersion(), $result->getReasonPhrase());
+        $response = new Response($result->getStatusCode(), $responseHeaders, $result->getBody(), $result->getProtocolVersion(), $result->getReasonPhrase());
         
         return $response;
     }
@@ -143,7 +149,7 @@ class DefaultProxy implements RequestHandlerInterface, iCanBeConvertedToUxon
      * 
      * @uxon-property remove_request_headers
      * @uxon-type object
-     * @uxon-template ["Authoriaztion"]
+     * @uxon-template ["Authorization"]
      * @uxon-default []
      * 
      * @param UxonObject $value
