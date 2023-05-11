@@ -15,6 +15,7 @@ use GuzzleHttp\Psr7\Request;
 use exface\Core\Factories\DataConnectionFactory;
 use exface\UrlDataConnector\Interfaces\UrlConnectionInterface;
 use exface\Core\Interfaces\WorkbenchInterface;
+use exface\Core\CommonLogic\Debugger\HttpMessageDebugWidgetRenderer;
 
 class DefaultProxy implements RequestHandlerInterface, iCanBeConvertedToUxon
 {
@@ -48,9 +49,9 @@ class DefaultProxy implements RequestHandlerInterface, iCanBeConvertedToUxon
         $path = StringDataType::substringAfter($request->getUri()->getPath(), $this->getFacade()->getUrlRouteDefault() . '/', '');
         
         $routeBase = $this->getFromUrl();
-        $destinationPath = StringDataType::substringAfter($path, $routeBase);
+        $remotePath = StringDataType::substringAfter($path, $routeBase);
         if ($this->getUrldecodeDestinationPath()) {
-            $destinationPath = urldecode($destinationPath);
+            $remotePath = urldecode($remotePath);
         }
         
         $method = $request->getMethod();
@@ -60,18 +61,27 @@ class DefaultProxy implements RequestHandlerInterface, iCanBeConvertedToUxon
             $body = null;
         }
         
-        $destinationQuery = $request->getUri()->getQuery();
-        $destinationUrl = $this->getToUrl($path) . '/' . $destinationPath . ($destinationQuery ? '?' . $destinationQuery : '');
-        $destinationUrl = ltrim($destinationUrl, '/');
-        $destinationUrl = str_replace('//', '/', $destinationUrl);
+        $remoteQuery = $request->getUri()->getQuery();
+        $remoteUrl = $this->getToUrl($path) . '/' . $remotePath . ($remoteQuery ? '?' . $remoteQuery : '');
+        $remoteUrl = ltrim($remoteUrl, '/');
+        $remoteUrl = str_replace('//', '/', $remoteUrl);
         
         $connection = $this->getRouteConnection($path);
-        $result = $connection->sendRequest(new Request($method, $destinationUrl, $this->getRequestHeaders($request), $body));
+        $remoteRequest = new Request($method, $remoteUrl, $this->getRequestHeaders($request), $body);
+        $remoteResponse = $connection->sendRequest($remoteRequest);
+        $this->getWorkbench()->getLogger()->debug('Proxy request to "' . $remotePath . '" sent', [], new HttpMessageDebugWidgetRenderer($remoteRequest, $remoteResponse));
         
-        $responseHeaders = $this->getResponseHeaders($result);
+        $responseHeaders = $this->getResponseHeaders($remoteResponse);
         // TODO Merge haders from the target response and the security middleware in case the
         // latter added something important.
-        $response = new Response($result->getStatusCode(), $responseHeaders, $result->getBody(), $result->getProtocolVersion(), $result->getReasonPhrase());
+        
+        $response = new Response(
+            $remoteResponse->getStatusCode(), 
+            $responseHeaders, 
+            $remoteResponse->getBody(), 
+            $remoteResponse->getProtocolVersion(), 
+            $remoteResponse->getReasonPhrase()
+        );
         
         return $response;
     }
