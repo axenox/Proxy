@@ -67,9 +67,10 @@ class DefaultProxy implements RequestHandlerInterface, iCanBeConvertedToUxon
         $remoteUrl = str_replace('//', '/', $remoteUrl);
         
         $connection = $this->getRouteConnection($path);
-        $remoteRequest = new Request($method, $remoteUrl, $this->getRequestHeaders($request), $body);
+        $remoteRequest = new Request($method, $remoteUrl, $this->getRequestHeaders($request), $body, $request->getProtocolVersion());
+        $this->getWorkbench()->getLogger()->debug('Proxy request to "' . $remotePath . '" sent', [], new HttpMessageDebugWidgetRenderer($remoteRequest));
         $remoteResponse = $connection->sendRequest($remoteRequest);
-        $this->getWorkbench()->getLogger()->debug('Proxy request to "' . $remotePath . '" sent', [], new HttpMessageDebugWidgetRenderer($remoteRequest, $remoteResponse));
+        $this->getWorkbench()->getLogger()->debug('Proxy response from "' . $remotePath . '" received', [], new HttpMessageDebugWidgetRenderer($remoteRequest, $remoteResponse));
         
         $responseHeaders = $this->getResponseHeaders($remoteResponse);
         // TODO Merge haders from the target response and the security middleware in case the
@@ -93,14 +94,23 @@ class DefaultProxy implements RequestHandlerInterface, iCanBeConvertedToUxon
      */
     protected function getRequestHeaders(ServerRequestInterface $request) : array
     {
-        $requestHeaders = $request->getHeaders();
+        $headers = $request->getHeaders();
         foreach ($this->getRemoveRequestHeaders() as $header) {
-            unset ($requestHeaders[$header]);
+            foreach (array_keys($headers) as $h) {
+                if (strcasecmp($h, $header) === 0) {
+                    unset ($headers[$h]);
+                }
+            }
         }
         foreach ($this->getReplaceRequestHeaders() as $header => $value) {
-            $requestHeaders[$header] = $value;
+            foreach (array_keys($headers) as $h) {
+                if (strcasecmp($h, $header) === 0) {
+                    unset ($headers[$h]);
+                }
+            }
+            $headers[$header] = $value;
         }
-        return $requestHeaders;
+        return $headers;
     }
     
     /**
@@ -110,14 +120,23 @@ class DefaultProxy implements RequestHandlerInterface, iCanBeConvertedToUxon
      */
     protected function getResponseHeaders(ResponseInterface $response) : array
     {
-        $requestHeaders = $response->getHeaders();
+        $headers = $response->getHeaders();
         foreach ($this->getRemoveResponseHeaders() as $header) {
-            unset ($requestHeaders[$header]);
+            foreach (array_keys($headers) as $h) {
+                if (strcasecmp($h, $header) === 0) {
+                    unset ($headers[$h]);
+                }
+            }
         }
         foreach ($this->getReplaceResponseHeaders() as $header => $value) {
-            $requestHeaders[$header] = $value;
+            foreach (array_keys($headers) as $h) {
+                if (strcasecmp($h, $header) === 0) {
+                    unset ($headers[$h]);
+                }
+            }
+            $headers[$header] = $value;
         }
-        return $requestHeaders;
+        return $headers;
     }
     
     /**
