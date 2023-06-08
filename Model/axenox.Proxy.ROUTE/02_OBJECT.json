@@ -81,9 +81,9 @@
     "rows": [
         {
             "CREATED_ON": "2023-04-26 18:08:31",
-            "MODIFIED_ON": "2023-05-08 17:15:03",
+            "MODIFIED_ON": "2023-06-08 12:43:24",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
-            "MODIFIED_BY_USER": "0x31000000000000000000000000000000",
+            "MODIFIED_BY_USER": "0x11e8fe1c902c8ebea23ee4b318306b9a",
             "UID": "0x11edb3a596f414a4b3a5025041000001",
             "READABLE_FLAG": 1,
             "WRITABLE_FLAG": 1,
@@ -100,53 +100,126 @@
                 "widget_type": "Dialog",
                 "widgets": [
                     {
-                        "widget_type": "WidgetGroup",
-                        "width": "max",
-                        "widgets": [
+                        "widget_type": "Tabs",
+                        "tabs": [
                             {
-                                "attribute_alias": "NAME"
+                                "caption": "Route",
+                                "widgets": [
+                                    {
+                                        "attribute_alias": "UID",
+                                        "widget_type": "InputHidden",
+                                        "id": "uid_field"
+                                    },
+                                    {
+                                        "widget_type": "WidgetGroup",
+                                        "width": "max",
+                                        "widgets": [
+                                            {
+                                                "attribute_alias": "NAME"
+                                            },
+                                            {
+                                                "attribute_alias": "DESCRIPTION",
+                                                "height": 3
+                                            },
+                                            {
+                                                "attribute_alias": "APP"
+                                            },
+                                            {
+                                                "attribute_alias": "ALIAS"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "widget_type": "WidgetGroup",
+                                        "caption": "Route configuration",
+                                        "width": "max",
+                                        "height": "max",
+                                        "widgets": [
+                                            {
+                                                "attribute_alias": "ROUTE_URL"
+                                            },
+                                            {
+                                                "attribute_alias": "ROUTE_REGEX_FLAG"
+                                            },
+                                            {
+                                                "attribute_alias": "DESTINATION_URL"
+                                            },
+                                            {
+                                                "attribute_alias": "DESTINATION_CONNECTION"
+                                            },
+                                            {
+                                                "attribute_alias": "HANDLER_CLASS",
+                                                "id": "handler_class_field",
+                                                "width": "max"
+                                            },
+                                            {
+                                                "attribute_alias": "HANDLER_UXON",
+                                                "widget_type": "InputUxon",
+                                                "root_prototype": "=handler_class_field",
+                                                "height": 15,
+                                                "hide_caption": true
+                                            }
+                                        ]
+                                    }
+                                ]
                             },
                             {
-                                "attribute_alias": "DESCRIPTION",
-                                "height": 3
-                            },
-                            {
-                                "attribute_alias": "APP"
-                            },
-                            {
-                                "attribute_alias": "ALIAS"
-                            }
-                        ]
-                    },
-                    {
-                        "widget_type": "WidgetGroup",
-                        "caption": "Route configuration",
-                        "width": "max",
-                        "height": "max",
-                        "widgets": [
-                            {
-                                "attribute_alias": "ROUTE_URL"
-                            },
-                            {
-                                "attribute_alias": "ROUTE_REGEX_FLAG"
-                            },
-                            {
-                                "attribute_alias": "DESTINATION_URL"
-                            },
-                            {
-                                "attribute_alias": "DESTINATION_CONNECTION"
-                            },
-                            {
-                                "attribute_alias": "HANDLER_CLASS",
-                                "id": "handler_class_field",
-                                "width": "max"
-                            },
-                            {
-                                "attribute_alias": "HANDLER_UXON",
-                                "widget_type": "InputUxon",
-                                "root_prototype": "=handler_class_field",
-                                "height": 15,
-                                "hide_caption": true
+                                "caption": "Authorization Policies",
+                                "widgets": [
+                                    {
+                                        "widget_type": "DataTable",
+                                        "object_alias": "exface.Core.AUTHORIZATION_POLICY",
+                                        "filters": [
+                                            {
+                                                "attribute_alias": "ROUTE__UID",
+                                                "comparator": "==",
+                                                "required": true,
+                                                "hidden": true,
+                                                "value": "=uid_field"
+                                            }
+                                        ],
+                                        "columns": [
+                                            {
+                                                "attribute_alias": "EFFECT"
+                                            },
+                                            {
+                                                "attribute_alias": "NAME"
+                                            },
+                                            {
+                                                "attribute_alias": "TARGET_USER_ROLE__LABEL"
+                                            },
+                                            {
+                                                "attribute_alias": "APP__LABEL"
+                                            }
+                                        ],
+                                        "buttons": [
+                                            {
+                                                "action_alias": "exface.Core.ShowObjectCreateDialog",
+                                                "disabled_if": {
+                                                    "operator": "AND",
+                                                    "conditions": [
+                                                        {
+                                                            "value_left": "=uid_field",
+                                                            "comparator": "==",
+                                                            "value_right": ""
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "action_alias": "exface.Core.ShowObjectEditDialog",
+                                                "bind_to_double_click": true
+                                            },
+                                            {
+                                                "action_alias": "exface.Core.ShowObjectCopyDialog"
+                                            },
+                                            {
+                                                "action_alias": "exface.Core.DeleteObject",
+                                                "visibility": "optional"
+                                            }
+                                        ]
+                                    }
+                                ]
                             }
                         ]
                     }
