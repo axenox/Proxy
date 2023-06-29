@@ -671,7 +671,7 @@
         },
         {
             "CREATED_ON": "2023-06-08 12:22:24",
-            "MODIFIED_ON": "2023-06-08 12:22:24",
+            "MODIFIED_ON": "2023-06-08 14:44:40",
             "CREATED_BY_USER": "0x11e8fe1c902c8ebea23ee4b318306b9a",
             "MODIFIED_BY_USER": "0x11e8fe1c902c8ebea23ee4b318306b9a",
             "UID": "0x11ee907a5cb21dd4907a025041000001",
@@ -708,7 +708,7 @@
             "SORTERDIR": "",
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": "",
-            "DATA_ADDRESS_PROPS": "{\"SQL_JOIN_ON\":\"[#~right_alias#].target_facade_class_path = 'axenox\\\/proxy\\\/Facades\\\/ProxyFacade.php' \\nAND [#~right_alias#].condition_uxon LIKE CONCAT('%', [#~left_alias#].route_url, '%')\"}",
+            "DATA_ADDRESS_PROPS": "{\"SQL_JOIN_ON\":\"[#~right_alias#].target_facade_class_path = 'axenox\\\/proxy\\\/Facades\\\/ProxyFacade.php' \\nAND (\\n    [#~right_alias#].condition_uxon LIKE CONCAT('%', [#~left_alias#].route_url, '%')\\n    AND [#~right_alias#].condition_uxon LIKE CONCAT('%', REPLACE([#~left_alias#].route_url, '\\\/', '\\\\\\\\\\\\\\\\\\\/'), '%')\\n)\"}",
             "DEFAULT_VALUE": "",
             "FIXED_VALUE": "",
             "CUSTOM_DATA_TYPE": null

@@ -81,7 +81,7 @@
     "rows": [
         {
             "CREATED_ON": "2023-04-26 18:08:31",
-            "MODIFIED_ON": "2023-06-08 12:43:24",
+            "MODIFIED_ON": "2023-06-08 14:45:50",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
             "MODIFIED_BY_USER": "0x11e8fe1c902c8ebea23ee4b318306b9a",
             "UID": "0x11edb3a596f414a4b3a5025041000001",
@@ -164,7 +164,7 @@
                                 ]
                             },
                             {
-                                "caption": "Authorization Policies",
+                                "caption": "Users & authorization policies",
                                 "widgets": [
                                     {
                                         "widget_type": "DataTable",
@@ -187,6 +187,10 @@
                                             },
                                             {
                                                 "attribute_alias": "TARGET_USER_ROLE__LABEL"
+                                            },
+                                            {
+                                                "attribute_alias": "TARGET_USER_ROLE__USER_ROLE_USERS__USER__USERNAME:LIST_DISTINCT",
+                                                "caption": "Users"
                                             },
                                             {
                                                 "attribute_alias": "APP__LABEL"
