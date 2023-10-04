@@ -1,7 +1,16 @@
 # Set up a proxy route to a Git server
 
-## Add a route
+## Overview
 
-## Clone a repo
+Steps to set up a proxy connection to a Git repo:
 
-`git clone https://domain.com/api/proxy/git/myrepo.git c:\path_to_workbench\vendor\myvendor\myapp -c http.extraHeader="Authorization: Basic c2FsdF9ha2FiYWNobmlrOjEyMzQ1Njc4"`
+1. Add a repo-specific access key with only read/write repository permissions to make sure the proxy can only access that particular repo.
+2. Add an HTTP connection to the proxy workbench metamodel with the repo HTTPS URL and the key from above
+3. Add a Route to this connection
+4. Configure permissions for the route 
+
+## Adding a route
+
+## Cloning a repo
+
+`git clone https://<username>:@domain.com/api/proxy/git/myrepo.git c:\path_to_workbench\vendor\myvendor\myapp -c http.extraHeader="Authorization: Basic <username:password (as Base64)>"`
