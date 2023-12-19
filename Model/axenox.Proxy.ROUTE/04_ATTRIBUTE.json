@@ -348,7 +348,9 @@
             "SORTERDIR": "",
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": "",
-            "DATA_ADDRESS_PROPS": "{\"SQL_DATA_TYPE\":\"binary\"}",
+            "DATA_ADDRESS_PROPS": {
+                "SQL_DATA_TYPE": "binary"
+            },
             "DEFAULT_VALUE": "",
             "FIXED_VALUE": "",
             "CUSTOM_DATA_TYPE": null
@@ -436,7 +438,9 @@
             "SORTERDIR": "",
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": "",
-            "DATA_ADDRESS_PROPS": "{\"SQL_DATA_TYPE\":\"binary\"}",
+            "DATA_ADDRESS_PROPS": {
+                "SQL_DATA_TYPE": "binary"
+            },
             "DEFAULT_VALUE": "",
             "FIXED_VALUE": "",
             "CUSTOM_DATA_TYPE": null
@@ -708,7 +712,9 @@
             "SORTERDIR": "",
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": "",
-            "DATA_ADDRESS_PROPS": "{\"SQL_JOIN_ON\":\"[#~right_alias#].target_facade_class_path = 'axenox\\\/proxy\\\/Facades\\\/ProxyFacade.php' \\nAND (\\n    [#~right_alias#].condition_uxon LIKE CONCAT('%', [#~left_alias#].route_url, '%')\\n    AND [#~right_alias#].condition_uxon LIKE CONCAT('%', REPLACE([#~left_alias#].route_url, '\\\/', '\\\\\\\\\\\\\\\\\\\/'), '%')\\n)\"}",
+            "DATA_ADDRESS_PROPS": {
+                "SQL_JOIN_ON": "[#~right_alias#].target_facade_class_path = 'axenox\/proxy\/Facades\/ProxyFacade.php' \nAND (\n    [#~right_alias#].condition_uxon LIKE CONCAT('%', [#~left_alias#].route_url, '%')\n    AND [#~right_alias#].condition_uxon LIKE CONCAT('%', REPLACE([#~left_alias#].route_url, '\/', '\\\\\\\\\/'), '%')\n)"
+            },
             "DEFAULT_VALUE": "",
             "FIXED_VALUE": "",
             "CUSTOM_DATA_TYPE": null
