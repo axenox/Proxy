@@ -32,7 +32,7 @@ class ProxyRouteInstaller extends AbstractAppInstaller
     public function __construct(SelectorInterface $selectorToInstall, InstallerContainerInterface $installerContainer)
     {
         $this->additionInstaller = (new MetaModelAdditionInstaller($selectorToInstall, $installerContainer, 'Proxy'))
-        ->addDataToReplace('axenox.Proxy.proxy_route', 'MODIFIED_ON', 'APP');
+        ->addDataToReplace('axenox.Proxy.proxy_route', 'CREATED_ON', 'APP');
     }
     
     /**
