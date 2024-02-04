@@ -70,7 +70,7 @@ class DefaultProxy implements RequestHandlerInterface, iCanBeConvertedToUxon
         $remoteRequest = new Request($method, $remoteUrl, $this->getRequestHeaders($request), $body, $request->getProtocolVersion());
         $this->getWorkbench()->getLogger()->debug('Proxy request to "' . $remotePath . '" sent', [], new HttpMessageDebugWidgetRenderer($remoteRequest));
         $remoteResponse = $connection->sendRequest($remoteRequest);
-        $this->getWorkbench()->getLogger()->debug('Proxy response from "' . $remotePath . '" received', [], new HttpMessageDebugWidgetRenderer($remoteRequest, $remoteResponse));
+        $this->getWorkbench()->getLogger()->debug('Proxy response (' . $remoteResponse->getStatusCode() . ') from "' . $remotePath . '" received', [], new HttpMessageDebugWidgetRenderer($remoteRequest, $remoteResponse));
         
         $responseHeaders = $this->getResponseHeaders($remoteResponse);
         // TODO Merge haders from the target response and the security middleware in case the
