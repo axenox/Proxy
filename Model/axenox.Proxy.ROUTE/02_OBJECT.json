@@ -81,9 +81,9 @@
     "rows": [
         {
             "CREATED_ON": "2023-04-26 18:08:31",
-            "MODIFIED_ON": "2023-06-08 14:45:50",
+            "MODIFIED_ON": "2024-04-08 19:26:03",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
-            "MODIFIED_BY_USER": "0x11e8fe1c902c8ebea23ee4b318306b9a",
+            "MODIFIED_BY_USER": "0x31000000000000000000000000000000",
             "UID": "0x11edb3a596f414a4b3a5025041000001",
             "READABLE_FLAG": 1,
             "WRITABLE_FLAG": 1,
@@ -145,7 +145,8 @@
                                                 "attribute_alias": "DESTINATION_URL"
                                             },
                                             {
-                                                "attribute_alias": "DESTINATION_CONNECTION"
+                                                "attribute_alias": "DESTINATION_CONNECTION",
+                                                "id": "connection_selector"
                                             },
                                             {
                                                 "attribute_alias": "HANDLER_CLASS",
@@ -226,6 +227,37 @@
                                 ]
                             }
                         ]
+                    }
+                ],
+                "buttons": [
+                    {
+                        "caption": "Edit connection",
+                        "close_dialog": false,
+                        "disable_condition": {
+                            "widget_link": "connection_selector!UID",
+                            "comparator": "==",
+                            "value": ""
+                        },
+                        "action": {
+                            "alias": "exface.Core.ShowObjectEditDialog",
+                            "object_alias": "exface.Core.CONNECTION",
+                            "input_mapper": {
+                                "column_to_column_mappings": [
+                                    {
+                                        "from": "DESTINATION_CONNECTION",
+                                        "to": "UID"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "caption": "Create connection",
+                        "close_dialog": false,
+                        "action": {
+                            "alias": "exface.Core.ShowObjectCreateDialog",
+                            "object_alias": "exface.Core.CONNECTION"
+                        }
                     }
                 ]
             },
