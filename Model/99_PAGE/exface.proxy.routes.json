@@ -11,7 +11,7 @@
     "created_by_user_selector": "0x31000000000000000000000000000000",
     "created_on": "2023-04-26 18:21:58",
     "modified_by_user_selector": "0x31000000000000000000000000000000",
-    "modified_on": "2023-12-19 09:42:48",
+    "modified_on": "2024-07-01 15:00:26",
     "contents": {
         "widget_type": "SplitVertical",
         "object_alias": "axenox.Proxy.ROUTE",
@@ -154,6 +154,65 @@
                                             },
                                             {
                                                 "action_alias": "exface.Core.ShowObjectCopyDialog"
+                                            },
+                                            {
+                                                "caption": "HTTP Basic auth header",
+                                                "icon": "code",
+                                                "action": {
+                                                    "alias": "exface.core.ShowDialog",
+                                                    "input_rows_min": 1,
+                                                    "input_rows_max": 1,
+                                                    "dialog": {
+                                                        "maximized": false,
+                                                        "columns_in_grid": 1,
+                                                        "height": "auto",
+                                                        "widgets": [
+                                                            {
+                                                                "attribute_alias": "USERNAME",
+                                                                "disabled": true
+                                                            },
+                                                            {
+                                                                "data_column_name": "_PASSWORD",
+                                                                "widget_type": "InputPassword",
+                                                                "caption": "Password",
+                                                                "required": true
+                                                            }
+                                                        ],
+                                                        "buttons": [
+                                                            {
+                                                                "caption": "Build HTTP header",
+                                                                "icon": "code",
+                                                                "visibility": "promoted",
+                                                                "align": "opposite",
+                                                                "action": {
+                                                                    "alias": "exface.core.ShowDialog",
+                                                                    "input_mapper": {
+                                                                        "from_object_alias": "exface.Core.USER",
+                                                                        "to_object_alias": "exface.Core.USER",
+                                                                        "inherit_columns": "all",
+                                                                        "column_to_column_mappings": [
+                                                                            {
+                                                                                "from": "=Concatenate('Basic ', Base64(Concatenate(USERNAME,':',_PASSWORD)))",
+                                                                                "to": "_AUTH"
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    "dialog": {
+                                                                        "maximized": false,
+                                                                        "height": "auto",
+                                                                        "columns_in_grid": 1,
+                                                                        "widgets": [
+                                                                            {
+                                                                                "widget_type": "InputText",
+                                                                                "data_column_name": "_AUTH"
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                }
                                             },
                                             {
                                                 "action_alias": "exface.Core.DeleteObject",
