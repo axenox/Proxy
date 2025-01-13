@@ -47,7 +47,7 @@
                                 "attribute_alias": "ALIAS"
                             },
                             {
-                                "calculation": "=Concatenate(WorkbenchUrl(), 'api\/proxy\/', ROUTE_URL)"
+                                "calculation": "=Concatenate(WorkbenchUrl(), 'api/proxy/', ROUTE_URL)"
                             },
                             {
                                 "attribute_alias": "DESTINATION_CONNECTION__LABEL"
@@ -90,7 +90,7 @@
                                         "widgets": [
                                             {
                                                 "widget_type": "Browser",
-                                                "value": "[#api#]\/docs\/axenox\/Proxy\/Docs\/index.md"
+                                                "value": "[#api#]/docs/axenox/Proxy/Docs/index.md"
                                             }
                                         ]
                                     }
@@ -115,7 +115,7 @@
                                         "filters": [
                                             {
                                                 "attribute_alias": "USER_POLICY__POLICY__TARGET_FACADE",
-                                                "value": "axenox\/proxy\/Facades\/ProxyFacade.php",
+                                                "value": "axenox/proxy/Facades/ProxyFacade.php",
                                                 "hidden": true
                                             }
                                         ],
@@ -231,7 +231,7 @@
                                         "filters": [
                                             {
                                                 "attribute_alias": "AUTHORIZATION_POLICY__TARGET_FACADE",
-                                                "value": "axenox\/proxy\/Facades\/ProxyFacade.php",
+                                                "value": "axenox/proxy/Facades/ProxyFacade.php",
                                                 "hidden": true
                                             }
                                         ],
@@ -280,7 +280,7 @@
                                             {
                                                 "attribute_alias": "TARGET_FACADE",
                                                 "hidden": true,
-                                                "value": "axenox\/proxy\/Facades\/ProxyFacade.php"
+                                                "value": "axenox/proxy/Facades/ProxyFacade.php"
                                             }
                                         ],
                                         "columns": [
