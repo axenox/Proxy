@@ -1,6 +1,7 @@
 <?php
 namespace axenox\Proxy\Facades\RequestHandlers;
 
+use exface\Core\CommonLogic\Debugger\HttpMessageDebugger;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -15,7 +16,6 @@ use GuzzleHttp\Psr7\Request;
 use exface\Core\Factories\DataConnectionFactory;
 use exface\UrlDataConnector\Interfaces\UrlConnectionInterface;
 use exface\Core\Interfaces\WorkbenchInterface;
-use exface\Core\CommonLogic\Debugger\HttpMessageDebugWidgetRenderer;
 
 class DefaultProxy implements RequestHandlerInterface, iCanBeConvertedToUxon
 {
@@ -68,9 +68,9 @@ class DefaultProxy implements RequestHandlerInterface, iCanBeConvertedToUxon
         
         $connection = $this->getRouteConnection($path);
         $remoteRequest = new Request($method, $remoteUrl, $this->getRequestHeaders($request), $body, $request->getProtocolVersion());
-        $this->getWorkbench()->getLogger()->debug('Proxy request to "' . $remotePath . '" sent', [], new HttpMessageDebugWidgetRenderer($remoteRequest));
+        $this->getWorkbench()->getLogger()->debug('Proxy request to "' . $remotePath . '" sent', [], new HttpMessageDebugger($remoteRequest));
         $remoteResponse = $connection->sendRequest($remoteRequest);
-        $this->getWorkbench()->getLogger()->debug('Proxy response (' . $remoteResponse->getStatusCode() . ') from "' . $remotePath . '" received', [], new HttpMessageDebugWidgetRenderer($remoteRequest, $remoteResponse));
+        $this->getWorkbench()->getLogger()->debug('Proxy response (' . $remoteResponse->getStatusCode() . ') from "' . $remotePath . '" received', [], new HttpMessageDebugger($remoteRequest, $remoteResponse));
         
         $responseHeaders = $this->getResponseHeaders($remoteResponse);
         // TODO Merge haders from the target response and the security middleware in case the
