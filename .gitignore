@@ -6,12 +6,15 @@ tmp/
 *.swp
 *~.nib
 local.properties
-#.settings/
+.settings/
 .loadpath
 .recommenders
 
 # Eclipse Core
 #.project
+
+# PHPStorm
+.idea/
 
 # External tool builders
 .externalToolBuilders/
@@ -48,5 +51,3 @@ local.properties
 
 # Code Recommenders
 .recommenders/
-
-Security/Logging/
