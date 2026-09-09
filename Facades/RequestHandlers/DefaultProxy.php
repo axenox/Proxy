@@ -34,6 +34,8 @@ class DefaultProxy implements RequestHandlerInterface, iCanBeConvertedToUxon
     private $responseHeadersToRemove = ['Transfer-Encoding'];
     
     private $responseHeadersToReplace = [];
+
+    private $timeoutSeconds = null;
     
     public function __construct(ProxyFacade $facade, array $routeModel)
     {
@@ -46,6 +48,12 @@ class DefaultProxy implements RequestHandlerInterface, iCanBeConvertedToUxon
     
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $timeoutSeconds = $this->getTimeoutSeconds();
+        $currentMaxExecutionTime = (int) ini_get('max_execution_time');
+        if ($timeoutSeconds !== null && $currentMaxExecutionTime > 0 && $currentMaxExecutionTime < $timeoutSeconds) {
+            set_time_limit($timeoutSeconds);
+        }
+
         $path = StringDataType::substringAfter($request->getUri()->getPath(), $this->getFacade()->getUrlRouteDefault() . '/', '');
         
         $routeBase = $this->getFromUrl();
@@ -85,6 +93,35 @@ class DefaultProxy implements RequestHandlerInterface, iCanBeConvertedToUxon
         );
         
         return $response;
+    }
+
+    /**
+     * Returns the PHP execution timeout configured for this proxy route.
+     * 
+     * @return int|null
+     */
+    protected function getTimeoutSeconds() : ?int
+    {
+        return $this->timeoutSeconds;
+    }
+
+    /**
+     * Increase the PHP maximum execution time for requests on this route to the specified number of seconds.
+     * 
+     * Leave empty (null) to retain the PHP configuration. Values below the current limit do not reduce it.
+     * 
+     * @uxon-property timeout_seconds
+     * @uxon-type integer
+     * @uxon-default null
+     * @uxon-template 60
+     * 
+     * @param int|null $value
+     * @return DefaultProxy
+     */
+    protected function setTimeoutSeconds(?int $value) : DefaultProxy
+    {
+        $this->timeoutSeconds = $value;
+        return $this;
     }
     
     /**
