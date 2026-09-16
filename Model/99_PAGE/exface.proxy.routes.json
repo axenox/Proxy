@@ -11,7 +11,7 @@
     "created_by_user_selector": "0x31000000000000000000000000000000",
     "created_on": "2023-04-26 18:21:58",
     "modified_by_user_selector": "0x31000000000000000000000000000000",
-    "modified_on": "2024-07-01 15:00:26",
+    "modified_on": "2026-09-16 11:46:26",
     "contents": {
         "widget_type": "SplitVertical",
         "object_alias": "axenox.Proxy.ROUTE",
@@ -106,10 +106,10 @@
                         "widget_type": "SplitHorizontal",
                         "panels": [
                             {
-                                "caption": "Users",
                                 "width": "40%",
                                 "widgets": [
                                     {
+                                        "caption": "Users",
                                         "widget_type": "DataTable",
                                         "object_alias": "exface.Core.USER",
                                         "filters": [
@@ -223,9 +223,9 @@
                                 ]
                             },
                             {
-                                "caption": "Roles",
                                 "widgets": [
                                     {
+                                        "caption": "Roles",
                                         "widget_type": "DataTable",
                                         "object_alias": "exface.Core.USER_ROLE",
                                         "filters": [
@@ -270,10 +270,10 @@
                                 ]
                             },
                             {
-                                "caption": "Policies",
                                 "width": "40%",
                                 "widgets": [
                                     {
+                                        "caption": "Policies",
                                         "widget_type": "DataTable",
                                         "object_alias": "exface.Core.AUTHORIZATION_POLICY",
                                         "filters": [
